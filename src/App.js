@@ -7,58 +7,40 @@ export class App extends Component {
 	constructor() {
 		super();
 
-		this.state = { articles: [], totalPages: 1, loading: false, page: 1, category: "general" };
+		this.state = { articles: [], totalResults: 0, loading: false, page: 1, category: "general" };
 	}
 
 	loadArticles = async params => {
-		this.setState({ loading: true });
 		const { data } = await newsapi.get("/top-headlines", { params });
 
-		this.setState({ articles: data.articles, totalPages: Math.ceil(data.totalResults / 18), loading: false });
+		this.setState({ articles: this.state.articles.concat(data.articles), totalResults: data.totalResults, loading: false });
 	};
 
 	componentDidMount() {
+		this.setState({ loading: true });
 		const params = {
 			country: "in",
-			pageSize: 18,
 			page: this.state.page,
 			category: this.state.category,
 		};
 		this.loadArticles(params);
 	}
 
-	onNextClick = () => {
-		if (this.state.page + 1 <= this.state.totalPages) {
-			this.setState({ articles: [], page: this.state.page + 1 });
-			const params = {
-				country: "in",
-				pageSize: 18,
-				page: this.state.page + 1,
-				category: this.state.category,
-			};
-			this.loadArticles(params);
-		}
-	};
-
-	onPrevClick = () => {
-		if (this.state.page > 1) {
-			this.setState({ articles: [], page: this.state.page - 1 });
-			const params = {
-				country: "in",
-				pageSize: 18,
-				page: this.state.page - 1,
-				category: this.state.category,
-			};
-			this.loadArticles(params);
-		}
+	fetchMoreData = () => {
+		this.setState({ page: this.state.page + 1 });
+		const params = {
+			country: "in",
+			page: this.state.page,
+			category: this.state.category,
+		};
+		this.loadArticles(params);
 	};
 
 	onCategoryChange = category => {
-		this.setState({ articles: [], category });
+		this.setState({ articles: [], page: 1, category });
 		const params = {
 			country: "in",
-			pageSize: 18,
-			page: this.state.page,
+			page: 1,
 			category,
 		};
 		this.loadArticles(params);
@@ -68,7 +50,7 @@ export class App extends Component {
 		return (
 			<Fragment>
 				<NavBar title="GlobeNews" onCategoryChange={this.onCategoryChange} />
-				<News articles={this.state.articles} loading={this.state.loading} onNextClick={this.onNextClick} onPrevClick={this.onPrevClick} page={this.state.page} totalPages={this.state.totalPages} category={this.state.category} />
+				<News articles={this.state.articles} loading={this.state.loading} fetchMoreData={this.fetchMoreData} page={this.state.page} totalResults={this.state.totalResults} category={this.state.category} />
 			</Fragment>
 		);
 	}
