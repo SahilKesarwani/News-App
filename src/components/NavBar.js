@@ -1,17 +1,12 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 export class NavBar extends Component {
-	static propTypes = {
-		title: PropTypes.string.isRequired,
-	};
-
 	render() {
 		return (
 			<nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
 				<div className="container-fluid">
 					<a className="navbar-brand" href="/">
-						{this.props.title}
+						GlobeNews
 					</a>
 					<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span className="navbar-toggler-icon"></span>
@@ -69,6 +64,12 @@ export class NavBar extends Component {
 								</ul>
 							</li>
 						</ul>
+						<form className="d-flex">
+							<input className="form-control" value={this.props.searchTerm} onChange={this.props.onSearchTermChange} placeholder="Search" />
+							<button className="btn btn-outline-success" onClick={this.props.onSearchSubmit}>
+								Search
+							</button>
+						</form>
 					</div>
 				</div>
 			</nav>
