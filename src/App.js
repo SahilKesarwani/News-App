@@ -18,9 +18,9 @@ export class App extends Component {
 	};
 
 	loadCountries = async () => {
-		const { data } = await countries.get("/all");
+		const { data } = await countries.get("/countries/iso");
 
-		this.setState({ countries: data });
+		this.setState({ countries: data.data });
 	};
 
 	componentDidMount() {

@@ -27,12 +27,15 @@ export class News extends Component {
 		const { countries } = this.props;
 		if (countries) {
 			return countries.map(country => {
-				const { name, alpha2Code, alpha3Code } = country;
-				return (
-					<option key={alpha3Code.toLowerCase()} value={alpha2Code.toLowerCase()}>
-						{name}
-					</option>
-				);
+				const { name, Iso2, Iso3 } = country;
+				if (name && Iso2 && Iso3) {
+					return (
+						<option key={Iso3.toLowerCase()} value={Iso2.toLowerCase()}>
+							{name}
+						</option>
+					);
+				}
+				return null;
 			});
 		}
 	}
